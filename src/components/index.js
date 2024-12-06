@@ -1,3 +1,17 @@
+import avatarImage from '../images/avatar.jpg';
+import logoImage from '../images/logo.svg';
+import '../pages/index.css';
+import { initialCards } from './cards.js';
+import { toggleButtonState } from './validation.js';
+import{openModal,closeModal,handleOverlayClick}from './modal.js'
+
+const avatarElement = document.querySelector('.profile__image');
+avatarElement.style.backgroundImage = `url(${avatarImage})`;
+
+const logoElement = document.querySelector('.header__logo');
+logoElement.src = logoImage;
+
+/*
 // Function to open a popup
 function openModal(popup) {
     popup.classList.add('popup_is-opened');
@@ -7,6 +21,7 @@ function openModal(popup) {
 function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
 }
+*/
 
 // Function to create a card
 function createCard(cardData) {
