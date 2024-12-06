@@ -1,3 +1,2 @@
 # Проектная работа Mesto
-
-студент, когорта, стэк
+Tyshkevich Artem 3822Б1ПР3 HTML5/CSS/JavaScript
