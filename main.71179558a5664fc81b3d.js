@@ -240,86 +240,9 @@ var updateAvatar = function updateAvatar(avatarUrl) {
     return Promise.reject("Error: ".concat(res.status));
   });
 };
-;// ./src/components/index.js
-
-
-
-
-
-
-// Import API functions
-
-
-// Applying images via JavaScript
-var avatarElement = document.querySelector('.profile__image');
-avatarElement.style.backgroundImage = "url(".concat(avatar_namespaceObject, ")");
-var logoElement = document.querySelector('.header__logo');
-logoElement.src = logo_namespaceObject;
-
-// Elements on the page for user data
-var profileNameElement = document.querySelector('.profile__title');
-var profileDescriptionElement = document.querySelector('.profile__description');
-var profileAvatarElement = document.querySelector('.profile__image');
-
-// Container for cards
-var cardList = document.querySelector('.places__list');
-
-// Popup elements
-var profilePopup = document.querySelector('.popup_type_edit');
-var cardPopup = document.querySelector('.popup_type_new-card');
-var imagePopup = document.querySelector('.popup_type_image');
-
-// Popup close buttons
-var closeButtons = document.querySelectorAll('.popup__close');
-closeButtons.forEach(function (button) {
-  button.addEventListener('click', function (event) {
-    var popup = event.target.closest('.popup');
-    closeModal(popup);
-  });
-});
-
-// Profile editing form
-var profileEditButton = document.querySelector('.profile__edit-button');
-var profileFormElement = profilePopup.querySelector('.popup__form');
-var nameInput = profilePopup.querySelector('.popup__input_type_name');
-var jobInput = profilePopup.querySelector('.popup__input_type_description');
-
-// New card form
-var addCardButton = document.querySelector('.profile__add-button');
-var cardFormElement = cardPopup.querySelector('.popup__form');
-var placeNameInput = cardPopup.querySelector('.popup__input_type_card-name');
-var cardLinkInput = cardPopup.querySelector('.popup__input_type_url');
-
-// Variable to store the current user's ID
-var currentUserId = null;
-
-// Loading user data from the server
-getUserProfile().then(function (userData) {
-  profileNameElement.textContent = userData.name;
-  profileDescriptionElement.textContent = userData.about;
-  profileAvatarElement.style.backgroundImage = "url(".concat(userData.avatar, ")");
-  currentUserId = userData._id; // Save the current user's ID
-}).catch(function (err) {
-  console.error("Error loading profile: ".concat(err));
-});
-
-// Function to display cards
-function renderCards(cards) {
-  cards.forEach(function (cardData) {
-    var cardElement = createCard(cardData, currentUserId);
-    cardList.append(cardElement);
-  });
-}
-
-// Loading cards from the server
-getInitialCards().then(function (cards) {
-  renderCards(cards);
-}).catch(function (err) {
-  console.error("Error loading cards: ".concat(err));
-});
-
-// Function to create a card
+;// ./src/components/cards.js
 function createCard(cardData, currentUserId) {
+  var imageViewPopup = document.querySelector('.popup_type_image');
   var template = document.querySelector('#card-template').content;
   var cardElement = template.querySelector('.card').cloneNode(true);
   var cardImage = cardElement.querySelector('.card__image');
@@ -331,71 +254,116 @@ function createCard(cardData, currentUserId) {
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
   likeCount.textContent = cardData.likes.length;
-
-  // Check if the current user liked the card
   if (cardData.likes.some(function (user) {
     return user._id === currentUserId;
   })) {
     likeButton.classList.add('card__like-button_is-active');
   }
-
-  // Like handling
   likeButton.addEventListener('click', function () {
     if (likeButton.classList.contains('card__like-button_is-active')) {
       unlikeCard(cardData._id).then(function (updatedCard) {
         likeButton.classList.remove('card__like-button_is-active');
         likeCount.textContent = updatedCard.likes.length;
       }).catch(function (err) {
-        console.error('Error unliking the card:', err);
+        console.error('Ошибка при снятии лайка:', err);
       });
     } else {
       likeCard(cardData._id).then(function (updatedCard) {
         likeButton.classList.add('card__like-button_is-active');
         likeCount.textContent = updatedCard.likes.length;
       }).catch(function (err) {
-        console.error('Error liking the card:', err);
+        console.error('Ошибка при постановке лайка:', err);
       });
     }
   });
-
-  // Hide delete button if the card doesn't belong to the current user
   if (cardData.owner._id !== currentUserId) {
     deleteButton.style.display = 'none';
   }
-
-  // Deleting the card
   deleteButton.addEventListener('click', function () {
     deleteCard(cardData._id).then(function () {
       cardElement.remove();
     }).catch(function (err) {
-      console.error('Error deleting the card:', err);
+      console.error('Ошибка при удалении карточки:', err);
     });
   });
-
-  // Opening the image
   cardImage.addEventListener('click', function () {
-    var popupImage = imagePopup.querySelector('.popup__image');
-    var popupCaption = imagePopup.querySelector('.popup__caption');
+    var popupImage = imageViewPopup.querySelector('.popup__image');
+    var popupCaption = imageViewPopup.querySelector('.popup__caption');
     popupImage.src = cardData.link;
     popupImage.alt = cardData.name;
     popupCaption.textContent = cardData.name;
-    openModal(imagePopup);
+    openModal(imageViewPopup);
   });
   return cardElement;
 }
 
-// Opening the profile editing form
+
+;// ./src/components/index.js
+
+
+
+
+
+
+
+var avatarElement = document.querySelector('.profile__image');
+avatarElement.style.backgroundImage = "url(".concat(avatar_namespaceObject, ")");
+var logoElement = document.querySelector('.header__logo');
+logoElement.src = logo_namespaceObject;
+var profileNameElement = document.querySelector('.profile__title');
+var profileDescriptionElement = document.querySelector('.profile__description');
+var profileAvatarElement = document.querySelector('.profile__image');
+var cardList = document.querySelector('.places__list');
+var profilePopup = document.querySelector('.popup_type_edit');
+var cardPopup = document.querySelector('.popup_type_new-card');
+var imagePopup = document.querySelector('.popup_type_image');
+var avatarPopup = document.querySelector('.popup_type_update-avatar');
+var closeButtons = document.querySelectorAll('.popup__close');
+closeButtons.forEach(function (button) {
+  button.addEventListener('click', function (event) {
+    var popup = event.target.closest('.popup');
+    closeModal(popup);
+  });
+});
+var profileEditButton = document.querySelector('.profile__edit-button');
+var profileFormElement = profilePopup.querySelector('.popup__form');
+var nameInput = profilePopup.querySelector('.popup__input_type_name');
+var jobInput = profilePopup.querySelector('.popup__input_type_description');
+var addCardButton = document.querySelector('.profile__add-button');
+var cardFormElement = cardPopup.querySelector('.popup__form');
+var placeNameInput = cardPopup.querySelector('.popup__input_type_card-name');
+var cardLinkInput = cardPopup.querySelector('.popup__input_type_url');
+var avatarFormElement = avatarPopup.querySelector('.popup__form');
+var avatarInput = avatarFormElement.querySelector('.popup__input_type_avatar-url');
+var currentUserId = null;
+getUserProfile().then(function (userData) {
+  profileNameElement.textContent = userData.name;
+  profileDescriptionElement.textContent = userData.about;
+  profileAvatarElement.style.backgroundImage = "url(".concat(userData.avatar, ")");
+  currentUserId = userData._id;
+}).catch(function (err) {
+  console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u043F\u0440\u043E\u0444\u0438\u043B\u044F: ".concat(err));
+});
+function renderCards(cards) {
+  cards.forEach(function (cardData) {
+    var cardElement = createCard(cardData, currentUserId);
+    cardList.append(cardElement);
+  });
+}
+getInitialCards().then(function (cards) {
+  renderCards(cards);
+}).catch(function (err) {
+  console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A: ".concat(err));
+});
 profileEditButton.addEventListener('click', function () {
   nameInput.value = profileNameElement.textContent;
   jobInput.value = profileDescriptionElement.textContent;
   openModal(profilePopup);
 });
-
-// Handling profile editing form submission
 profileFormElement.addEventListener('submit', function (evt) {
   evt.preventDefault();
   var submitButton = evt.submitter;
-  submitButton.textContent = 'Saving...';
+  submitButton.textContent = 'Сохранение...';
   var updatedUserData = {
     name: nameInput.value,
     about: jobInput.value
@@ -405,24 +373,20 @@ profileFormElement.addEventListener('submit', function (evt) {
     profileDescriptionElement.textContent = userData.about;
     closeModal(profilePopup);
   }).catch(function (err) {
-    console.error("Error updating profile: ".concat(err));
+    console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u044F: ".concat(err));
   }).finally(function () {
-    submitButton.textContent = 'Save';
+    submitButton.textContent = 'Сохранить';
   });
 });
-
-// Opening the form to add a new card
 addCardButton.addEventListener('click', function () {
   placeNameInput.value = '';
   cardLinkInput.value = '';
   openModal(cardPopup);
 });
-
-// Handling new card form submission
 cardFormElement.addEventListener('submit', function (evt) {
   evt.preventDefault();
   var submitButton = evt.submitter;
-  submitButton.textContent = 'Creating...';
+  submitButton.textContent = 'Создание...';
   var newCardData = {
     name: placeNameInput.value,
     link: cardLinkInput.value
@@ -432,35 +396,34 @@ cardFormElement.addEventListener('submit', function (evt) {
     cardList.prepend(newCard);
     closeModal(cardPopup);
   }).catch(function (err) {
-    console.error("Error adding the card: ".concat(err));
+    console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438: ".concat(err));
   }).finally(function () {
-    submitButton.textContent = 'Create';
+    submitButton.textContent = 'Создать';
   });
 });
-var avatarPopup = document.querySelector('.popup_type_update-avatar');
-var avatarFormElement = avatarPopup.querySelector('.popup__form');
-var avatarInput = avatarFormElement.querySelector('.popup__input_type_avatar-url');
-
-// Opening the avatar editing form
 profileAvatarElement.addEventListener('click', function () {
+  avatarInput.value = '';
   openModal(avatarPopup);
 });
-
-// Handling avatar update form submission
 avatarFormElement.addEventListener('submit', function (evt) {
   evt.preventDefault();
   var submitButton = evt.submitter;
-  submitButton.textContent = 'Saving...';
+  submitButton.textContent = 'Сохранение...';
   var avatarUrl = avatarInput.value;
   updateAvatar(avatarUrl).then(function (userData) {
     profileAvatarElement.style.backgroundImage = "url(".concat(userData.avatar, ")");
     closeModal(avatarPopup);
     avatarFormElement.reset();
   }).catch(function (err) {
-    console.error("Error updating avatar: ".concat(err));
+    console.error("\u041E\u0448\u0438\u0431\u043A\u0430 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u0432\u0430\u0442\u0430\u0440\u0430: ".concat(err));
   }).finally(function () {
-    submitButton.textContent = 'Save';
+    submitButton.textContent = 'Сохранить';
   });
+});
+avatarInput.addEventListener('input', function () {
+  var inputs = [avatarInput];
+  var submitButton = avatarFormElement.querySelector('.popup__button');
+  toggleButtonState(inputs, submitButton);
 });
 /******/ })()
 ;
