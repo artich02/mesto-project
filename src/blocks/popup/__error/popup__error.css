@@ -1,8 +1,8 @@
 .popup__error {
-    color: red; /* Цвет текста ошибки */
-    font-size: 12px; /* Размер шрифта */
-    margin-top: 5px; /* Расстояние между полем и текстом ошибки */
-    font-family: 'Arial', sans-serif; /* Шрифт */
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    font-family: 'Arial', sans-serif;
   }
   .popup__error_visible {
     display: block;

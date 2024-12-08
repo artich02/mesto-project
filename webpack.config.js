@@ -13,10 +13,10 @@ module.exports = {
    },
    mode: 'development',
    devServer: {
-      static: path.resolve(__dirname, './dist'), // Folder for the server
-      compress: true, // Compression
-      port: 8080, // Server port
-      open: true, // Auto-open in browser
+      static: path.resolve(__dirname, './dist'),
+      compress: true,
+      port: 8080,
+      open: true,
    },
    module: {
       rules: [

@@ -29,7 +29,6 @@ function openModal(popup) {
   }
 
   document.addEventListener('keydown', closeByEsc);
-
   popup.addEventListener('mousedown', handleOverlayClick);
 }
 

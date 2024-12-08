@@ -1,8 +1,17 @@
 {
-  "name": "mesto-project-tyshkevich",
-  "version": "0.0.1",
-  "description": "студент, когорта, стэк",
+  "name": "mesto-project",
+  "version": "1.0.0",
+  "description": "Учебный проект для Yndex Practicum UNN",
   "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "keywords": [],
+  "author": "Artem Tyshkevich",
+  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
@@ -11,19 +20,17 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
-    "cssnano": "^7.0.6",
+    "file-loader": "^6.2.0",
+    "gh-pages": "^6.2.0",
     "html-webpack-plugin": "^5.6.3",
+    "image-webpack-loader": "^8.1.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   },
-  "scripts": {
-    "build": "webpack --mode production",
-    "dev": "webpack serve"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "core-js": "^3.39.0"
   }
